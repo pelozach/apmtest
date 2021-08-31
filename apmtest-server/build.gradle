@@ -44,7 +44,7 @@ dependencies {
 
     //datadog
     implementation "com.datadoghq:java-dogstatsd-client:2.11.0"
-    implementation "com.datadoghq:dd-trace-api:0.82.0"
+    implementation "com.datadoghq:dd-trace-api:0.85.0"
 
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
