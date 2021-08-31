@@ -1,0 +1,8 @@
+micronaut:
+  server:
+    port: 8081
+  application:
+      name: apmtest-server
+grpc:
+    server:
+        port: 50051

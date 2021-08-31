@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package datadog.apmtest.v1;
+
+import "google/api/annotations.proto";
+
+option java_package = "com.datadog.apmtest.v1";
+option java_multiple_files = true;
+option java_outer_classname = "ApmTestProto";
+
+
+service ApmTest {
+    rpc CreateStream(CreateStreamRequest) returns (stream Message) {
+        option (google.api.http) = {
+            post: "/v1/:stream"
+            body: "*"
+  	    };
+    }
+}
+
+
+message Message {}
+
+message CreateStreamRequest {}

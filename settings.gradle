@@ -1,0 +1,2 @@
+rootProject.name = "apmtest"
+include("apmtest-server")

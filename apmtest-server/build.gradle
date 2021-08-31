@@ -1,0 +1,85 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "$kotlinVersion"
+    id "org.jetbrains.kotlin.kapt" version "$kotlinVersion"
+    id "org.jetbrains.kotlin.plugin.allopen" version "$kotlinVersion"
+    id "com.github.johnrengelman.shadow" version "6.1.0"
+    id("io.micronaut.application") version "1.4.2"
+    id 'com.google.protobuf' version '0.8.15'
+    id "application"
+    id "jacoco"
+    id "idea"
+}
+
+version "0.1"
+group "com.datadog.apmtest.server"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("io.micronaut:micronaut-validation")
+
+    protobuf files("$rootDir/proto/")
+    kapt(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    kapt("io.micronaut:micronaut-inject-java")
+    kapt("io.micronaut:micronaut-validation")
+
+    implementation("javax.annotation:javax.annotation-api")
+  
+    implementation(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinxCoroutinesVersion")
+    implementation("io.micronaut:micronaut-runtime:$micronautVersion")
+    implementation("io.micronaut.grpc:micronaut-grpc-server-runtime:$micronautGrpcVersion")
+    implementation("io.micronaut.grpc:micronaut-grpc-client-runtime:$micronautGrpcVersion")
+    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime:$micronautVersion")
+
+    implementation("io.grpc:grpc-kotlin-stub:${grpcKotlinVersion}")
+    implementation("io.grpc:grpc-services:${grpcVersion}")
+
+    implementation("io.micronaut.cache:micronaut-cache-core")
+
+    //datadog
+    implementation "com.datadoghq:java-dogstatsd-client:2.11.0"
+    implementation "com.datadoghq:dd-trace-api:0.82.0"
+
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
+
+    kaptTest("io.micronaut:micronaut-inject-java")
+}
+
+mainClassName = "com.datadog.apmtest.server.Application"
+
+
+compileKotlin {
+	kotlinOptions {
+	    jvmTarget = '15'
+	    //Will retain parameter names for Java reflection
+	    javaParameters = true
+	}
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:${protocVersion}" }
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" }
+        grpckt { artifact = "io.grpc:protoc-gen-grpc-kotlin:${grpcKotlinVersion}:jdk7@jar" }
+    }
+    generateProtoTasks {
+        all().each{ task ->
+            task.generateDescriptorSet = true
+            task.descriptorSetOptions.includeImports = true
+            task.plugins {
+                grpc {}
+                grpckt {}
+            }
+        }
+    }
+}
