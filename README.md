@@ -36,7 +36,7 @@ gotten any greater visibility into what is going wrong at the application or tra
 
 ## Problem 2
 
-dd-agent-java version 0.85.0 includes a fix to the TracingServerInterceptor that should remove the original need for our custom interceptor.
+dd-trace-java version 0.85.0 includes a fix to the TracingServerInterceptor that should remove the original need for our custom interceptor.
 This fix manually ignores CancellationExceptions and prevents them from being logged to the trace- this is a great fix and we really appreciate the
 thought there.
 
